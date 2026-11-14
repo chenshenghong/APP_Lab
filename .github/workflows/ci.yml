@@ -1,0 +1,28 @@
+name: Repository checks
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  repository-check:
+    name: Check repository structure
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify repository README
+        shell: bash
+        run: |
+          set -euo pipefail
+          git ls-files --error-unmatch README.md > /dev/null
+          test -f README.md
+          test ! -L README.md
+          test -s README.md
